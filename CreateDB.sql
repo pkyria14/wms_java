@@ -1,9 +1,9 @@
 --TABLES
 CREATE TABLE [dbo].[Employee](
 	[SSN] [int] NOT NULL,
+	[ID] [int] UNIQUE,
 	[Fname] [nvarchar](20) NOT NULL,
 	[Lname] [nvarchar](30) NOT NULL,
-	[ID] [int] NOT NULL UNIQUE,
 	[DateOfBirth] [date] NOT NULL,
 	[Email] [nvarchar](30) NOT NULL,
 	[Position] [nvarchar](50) NOT NULL,    
@@ -18,7 +18,7 @@ CREATE TABLE [dbo].[Employee](
 
 CREATE TABLE dbo.[Authentication](
   [SSN] [int] NOT NULL,
-  [Username] [nvarchar](30) NOT NULL ,
+  [Username] [nvarchar](30) NOT NULL,
   [Password] [nvarchar](30) NOT NULL,
   CONSTRAINT [PKAuthentication] PRIMARY KEY 
   ([Username] ASC)
@@ -38,7 +38,7 @@ CREATE TABLE dbo.[Client](
 )
 
 CREATE TABLE dbo.[Transcactions](
-  [TranscactionID] [int] NOT NULL ,
+  [TranscactionID] [int] IDENTITY(1,1), 
   [TransDate] [date] NOT NULL,
   [Price] [smallmoney] NOT NULL,
   [ClientID] [int] NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE dbo.[Transcactions](
 
 
 CREATE TABLE dbo.[Warehouse](
-  [WarehouseID] [smallint] NOT NULL,
+  [WarehouseID] [smallint] IDENTITY(1,1),
   [Location] [nvarchar](30) NOT NULL,
   [Capacity] [smallint] NOT NULL
   CONSTRAINT [PKwarehouse] PRIMARY KEY 
@@ -58,8 +58,8 @@ CREATE TABLE dbo.[Warehouse](
 
 
 CREATE TABLE dbo.[Pallet](
-  [PalletID] [smallint] NOT NULL,
-  [Position] [smallint] NOT NULL ,
+  [PalletID] [smallint] IDENTITY(1,1),
+  [Position] [smallint] NOT NULL UNIQUE,
   [WarehouseID] [smallint] NOT NULL,
   [Clientid][int] NOT NULL,
   [ImportDate] [date] NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE dbo.[Pallet](
 )
 
 CREATE TABLE dbo.[LogFile](
-	[LogFileNo] [int] NOT NULL,
+	[LogFileNo] [int] IDENTITY(1,1),
 	[Date] [date] NOT NULL,
 	[Report] [Text] NOT NULL
 	CONSTRAINT [PKLogFile] PRIMARY KEY
