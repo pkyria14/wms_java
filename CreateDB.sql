@@ -37,7 +37,7 @@ CREATE TABLE dbo.[Client](
   ([ID] ASC)
 )
 
-CREATE TABLE dbo.[Transcactions](
+CREATE TABLE dbo.[Transactions](
   [TranscactionID] [int] IDENTITY(1,1), 
   [TransDate] [date] NOT NULL,
   [Price] [smallmoney] NOT NULL,
@@ -66,9 +66,9 @@ CREATE TABLE dbo.[Pallet](
   [ExportDate] [date] NOT NULL,
   [IsFood] [bit] NOT NULL,
   [ExpirDate] [date] NULL,
-  [TotalCost] [smallmoney] NOT NULL,
   [BasicCost][smallmoney] NOT NULL,
-  [ExtraCost] [smallmoney] NOT NULL
+  [ExtraCost] [smallmoney] NOT NULL,
+  [TotalCost] [smallmoney] NOT NULL		  
   CONSTRAINT [PKpallet] PRIMARY KEY
   ([PalletID] ASC)
 )
