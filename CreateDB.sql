@@ -1,12 +1,12 @@
 --TABLES
 CREATE TABLE [dbo].[Employee](
+	[SSN] [int] NOT NULL,
 	[Fname] [nvarchar](20) NOT NULL,
 	[Lname] [nvarchar](30) NOT NULL,
 	[ID] [int] NOT NULL UNIQUE,
 	[DateOfBirth] [date] NOT NULL,
 	[Email] [nvarchar](30) NOT NULL,
 	[Position] [nvarchar](50) NOT NULL,    
-	[SSN] [int] NOT NULL,
 	[PhoneNumber] [int] NOT NULL,
 	[HomeNumber] [int] NOT NULL,
 	[Address] [nvarchar](80) NOT NULL,
@@ -18,16 +18,16 @@ CREATE TABLE [dbo].[Employee](
 
 CREATE TABLE dbo.[Authentication](
   [SSN] [int] NOT NULL,
-  [Username] [nvarchar](30) NOT NULL,
+  [Username] [nvarchar](30) NOT NULL ,
   [Password] [nvarchar](30) NOT NULL,
   CONSTRAINT [PKAuthentication] PRIMARY KEY 
   ([Username] ASC)
 )
 
 CREATE TABLE dbo.[Client](
+	[ID] [int] NOT NULL,
 	[Fname] [nvarchar](20) NOT NULL,
 	[Lname] [nvarchar](30) NOT NULL,
-	[ID] [int] NOT NULL,
 	[DateOfBirth] [date] NOT NULL,
 	[Email] [nvarchar](30) NOT NULL,
 	[PhoneNumber] [int] NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE dbo.[Client](
 )
 
 CREATE TABLE dbo.[Transcactions](
-  [TranscactionID] [int] NOT NULL,
+  [TranscactionID] [int] NOT NULL ,
   [TransDate] [date] NOT NULL,
   [Price] [smallmoney] NOT NULL,
   [ClientID] [int] NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE dbo.[Warehouse](
 
 CREATE TABLE dbo.[Pallet](
   [PalletID] [smallint] NOT NULL,
-  [Position] [smallint] NOT NULL UNIQUE,
+  [Position] [smallint] NOT NULL ,
   [WarehouseID] [smallint] NOT NULL,
   [Clientid][int] NOT NULL,
   [ImportDate] [date] NOT NULL,
