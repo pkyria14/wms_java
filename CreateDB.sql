@@ -65,7 +65,7 @@ CREATE TABLE dbo.[Pallet](
   [ImportDate] [date] NOT NULL,
   [ExportDate] [date] NOT NULL,
   [IsFood] [bit] NOT NULL,
-  [ExpirDate] [date] NOT NULL,
+  [ExpirDate] [date] NULL,
   [TotalCost] [smallmoney] NOT NULL,
   [BasicCost][smallmoney] NOT NULL,
   [ExtraCost] [smallmoney] NOT NULL
