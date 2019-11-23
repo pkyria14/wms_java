@@ -66,14 +66,14 @@ CREATE TABLE dbo.[Pallet](
   [PalletID] [smallint] IDENTITY(1,1),
   [Position] [smallint] NOT NULL , --have to check in in procedure
   [WarehouseID] [smallint] NOT NULL,
-  [PalletID][int] NOT NULL,
+  [ClientID][int] NOT NULL,
   [ImportDate] [date] NOT NULL,
   [ExportDate] [date] NOT NULL,
   [IsFood] [bit] NOT NULL,
   [ExpirDate] [date] NULL,
   [BasicCost][smallmoney] NOT NULL,
-  [ExtraCost] [smallmoney] NOT NULL, -- Calculate in insert procedure
-  [TotalCost] [smallmoney]  NULL ,		  
+  [ExtraCost] [smallmoney] NOT NULL, 
+  [TotalCost] [smallmoney]  NULL ,	-- Calculate in insert procedure	  
   CONSTRAINT [PKpallet] PRIMARY KEY
   ([PalletID] ASC)
 )
@@ -164,5 +164,5 @@ ADD CONSTRAINT [FK_Pallet_Warehouse] FOREIGN KEY ([WarehouseID])
 REFERENCES [dbo].[Warehouse] ([WarehouseID]);
 
 ALTER TABLE [dbo].[Pallet] WITH CHECK
-ADD CONSTRAINT [FK_Pallet_Client] FOREIGN KEY ([PalletID])
+ADD CONSTRAINT [FK_Pallet_Client] FOREIGN KEY ([ClientID])
 REFERENCES [dbo].[Client] ([ID]);
