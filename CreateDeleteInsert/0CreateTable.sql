@@ -39,11 +39,17 @@ CREATE TABLE dbo.[Client](
 CREATE TABLE dbo.[Transactions](
   [TransactionID] [int] IDENTITY(1,1), 
   [TransDate] [date] NOT NULL,
-  [Price] [smallmoney] NOT NULL,
+  [Price] [smallmoney]  NULL, --its calculated on its own
   [ClientID] [int] NOT NULL,
-  [PalletID] [smallint] NOT NULL
   CONSTRAINT [PKtransactions] PRIMARY KEY 
   ([TransactionID] ASC)
+)
+
+
+--New table 
+Create Table dbo.TransPallet (
+ [TransactionID] [int] NOT NULL,
+ [PalletID] [smallint]  NOT NULL,
 )
 
 
@@ -58,7 +64,7 @@ CREATE TABLE dbo.[Warehouse](
 
 CREATE TABLE dbo.[Pallet](
   [PalletID] [smallint] IDENTITY(1,1),
-  [Position] [smallint] NOT NULL UNIQUE,
+  [Position] [smallint] NOT NULL , --have to check in in procedure
   [WarehouseID] [smallint] NOT NULL,
   [Clientid][int] NOT NULL,
   [ImportDate] [date] NOT NULL,
@@ -66,11 +72,12 @@ CREATE TABLE dbo.[Pallet](
   [IsFood] [bit] NOT NULL,
   [ExpirDate] [date] NULL,
   [BasicCost][smallmoney] NOT NULL,
-  [ExtraCost] [smallmoney] NOT NULL,
-  [TotalCost] [smallmoney] NOT NULL		  
+  [ExtraCost] [smallmoney] NOT NULL, -- Calculate in insert procedure
+  [TotalCost] [smallmoney]  NULL ,		  
   CONSTRAINT [PKpallet] PRIMARY KEY
   ([PalletID] ASC)
 )
+
 
 CREATE TABLE dbo.[LogFile](
 	[LogFileNo] [int] IDENTITY(1,1),
@@ -79,6 +86,29 @@ CREATE TABLE dbo.[LogFile](
 	CONSTRAINT [PKLogFile] PRIMARY KEY
     ([LogFileNo] ASC)
 )
+
+
+--Triggers
+
+GO
+Create Trigger CalculateTransCost on TransPallet
+After insert
+AS
+begin
+Declare @cost int , @price int
+SET @cost = (
+Select TotalCost from dbo.Pallet P where P.PalletID = (Select PalletID from inserted)
+)
+SET @price = (
+Select price from dbo.Transactions T where TransactionID = (Select TransactionID from inserted)
+)
+
+UPDATE dbo.Transactions 
+SET Price = @price + @cost where TransactionID = (Select TransactionID from inserted)
+end
+GO
+
+
 
 --CONSTRAINTS 
 
@@ -93,8 +123,8 @@ ALTER TABLE dbo.[Client] ADD CONSTRAINT cPhones
 CHECK ( [PhoneNumber] LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'
 	AND [HomeNumber] LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]');
 
-ALTER TABLE dbo.[Transactions] ADD CONSTRAINT tPrice
-CHECK ( [Price] >=0 );
+--ALTER TABLE dbo.[Transactions] ADD CONSTRAINT tPrice
+--CHECK ( [Price] >=0 );
 
 ALTER TABLE dbo.[Warehouse] ADD CONSTRAINT wCapacity
 CHECK ( [Capacity] >=0 AND [Capacity] <= 1000 );
@@ -102,8 +132,8 @@ CHECK ( [Capacity] >=0 AND [Capacity] <= 1000 );
 ALTER TABLE dbo.[Pallet] ADD CONSTRAINT pPallet
 CHECK ( ([Position] % 100) <= 40 );
 
-ALTER TABLE dbo.[Pallet] ADD CONSTRAINT costPallet
-CHECK ( [TotalCost] = [BasicCost] + [ExtraCost]);
+--ALTER TABLE dbo.[Pallet] ADD CONSTRAINT costPallet
+--CHECK ( [TotalCost] = [BasicCost] + [ExtraCost]);
 
 ALTER TABLE dbo.[Pallet] ADD CONSTRAINT datePallet
 CHECK ( [ImportDate] < [ExportDate] AND [ImportDate] < [ExpirDate]);
@@ -118,8 +148,13 @@ ALTER TABLE [dbo].[Transactions] WITH CHECK
 ADD CONSTRAINT [FK_trans_Client] FOREIGN KEY ([ClientID])
 REFERENCES [dbo].[Client] ([ID]);
 
-ALTER TABLE [dbo].[Transactions] WITH CHECK
-ADD CONSTRAINT [FK_trans_PalletID] FOREIGN KEY ([PalletID])
+
+ALTER TABLE [dbo].[TransPallet] WITH CHECK
+ADD CONSTRAINT [FK_transPallet_Transactions] FOREIGN KEY ([TransactionID])
+REFERENCES [dbo].[Transactions] ([TransactionID]);
+
+ALTER TABLE [dbo].[TransPallet] WITH CHECK
+ADD CONSTRAINT [FK_transPallet_PalletID] FOREIGN KEY ([PalletID])
 REFERENCES [dbo].[Pallet] ([PalletID]);
 
 ALTER TABLE [dbo].[Pallet] WITH CHECK
