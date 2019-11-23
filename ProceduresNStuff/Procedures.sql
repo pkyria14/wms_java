@@ -131,4 +131,244 @@ select 'outp' = @outp
 
 select * from Pallet
 
+
+create procedure PalletShow
+@PalletID int
+AS
+Begin
+Select *
+from dbo.Pallet
+where PalletID = @PalletID
+End
+GO
+
+
+
+Declare @PalletID int=2 exec PalletShow @palletID
+
+
+create procedure PalletDelete
+@PalletID int
+AS
+Begin
+Delete
+from dbo.Pallet
+where PalletID = @PalletID
+End
+GO
+
+
+Declare @PalletID int=2 exec PalletDelete @palletID
 --Show and delete are left
+
+--------
+---Employee---
+
+drop procedure EmployeeInsert
+
+Go
+Create Procedure EmployeeInsert
+@SSN int,
+@ID int,
+@FName nvarchar(20),
+@LName nvarchar(20),
+@DateOfBirth date ,
+@Email nvarchar(30),
+@Position nvarchar(50) ,    
+@PhoneNumber int ,
+@HomeNumber int,
+@Address nvarchar(80),
+@Salary smallmoney ,
+@IsAdmin bit 
+AS
+ Begin
+	INSERT INTO dbo.Employee (SSN,ID,LNAME,FNAME,DATEOFBIRTH,Email,POSITION,PHONENUMBER,HOMENUMBER,ADDRESS,SALARY,ISADMIN) VALUES (@SSN,@ID,@LNAME,@FNAME,@DATEOFBIRTH,@email,@POSITION,@PHONENUMBER,@HOMENUMBER,@ADDRESS,@SALARY,@ISADMIN)
+	Return @SSN 
+ end
+
+Go
+
+declare 
+@SSN int = 1234567,
+@ID int = 123456,
+@FName nvarchar(20) = 'Hey',
+@LName nvarchar(20) = 'Delilah',
+@DateOfBirth date = '2019-01-01',
+@Email nvarchar(30) = 'Sup@bestemail.com' ,
+@Position nvarchar(50) = 'CEO',    
+@PhoneNumber int =99666666,
+@HomeNumber int = 24724666,
+@Address nvarchar(80)= 'How are you?',
+@Salary smallmoney = 99999,
+@IsAdmin bit = 1,
+@outp int
+exec @outp = EmployeeInsert @SSN,
+@ID ,
+@FName ,
+@LName ,
+@DateOfBirth ,
+@email,
+@Position  ,   
+@PhoneNumber ,
+@HomeNumber ,
+@Address ,
+@Salary ,
+@IsAdmin 
+select 'outp' = @outp
+
+GO
+
+select *
+from dbo.Employee
+
+drop procedure EmployeeUpdateEmail
+
+Create procedure EmployeeUpdateEmail
+@SSN int,@Email nvarchar(30)
+As
+begin
+IF EXISTS (select * from dbo.Employee where SSN=@SSN) 
+  Begin
+   update dbo.Employee
+   SET Email=@email
+   where SSN = @SSN
+   Return @SSN
+  end
+ELSE
+  begin
+  RAISERROR ('The SSN doesnt exist.',15,1);
+  end
+ end
+ GO
+
+
+ declare @SSN int = 123457 , @email nvarchar(30) = 'evenbetter@email.com',
+@outp int
+exec @outp = EmployeeUpdateEmail @SSN, @email
+select 'outp' = @outp
+
+GO
+
+drop procedure EmployeeUpdatePosition
+
+Create procedure EmployeeUpdatePosition
+@SSN int, @Position nvarchar(50)
+As
+begin
+IF EXISTS (select * from dbo.Employee where SSN=@SSN) 
+  Begin
+   update dbo.Employee
+   SET Position=@Position
+   where SSN = @SSN
+   Return @SSN
+  end
+ELSE
+  begin
+  RAISERROR ('The SSN doesnt exist.',15,1);
+  end
+ end
+ GO
+
+  declare @SSN int = 1234567 , @Position nvarchar(50) = 'GOD',
+@outp int
+exec @outp = EmployeeUpdatePosition @SSN, @Position
+select 'outp' = @outp
+
+Create procedure EmployeeUpdatePhoneNumber
+@SSN int, @PhoneNumber int
+As
+begin
+IF EXISTS (select * from dbo.Employee where SSN=@SSN) 
+  Begin
+   update dbo.Employee
+   SET PhoneNumber=@PhoneNumber
+   where SSN = @SSN
+   Return @SSN
+  end
+ELSE
+  begin
+  RAISERROR ('The SSN doesnt exist.',15,1);
+  end
+ end
+ GO
+
+
+Create procedure EmployeeUpdateSalary
+@SSN int, @Salary int
+As
+begin
+IF EXISTS (select * from dbo.Employee where SSN=@SSN) 
+  Begin
+   update dbo.Employee
+   SET Salary=@Salary
+   where SSN = @SSN
+   Return @SSN
+  end
+ELSE
+  begin
+  RAISERROR ('The SSN doesnt exist.',15,1);
+  end
+ end
+ GO
+
+ Create procedure EmployeeUpdateAddress
+@SSN int, @Address nvarchar(80)
+As
+begin
+IF EXISTS (select * from dbo.Employee where SSN=@SSN) 
+  Begin
+   update dbo.Employee
+   SET Address=@Address
+   where SSN = @SSN
+   Return @SSN
+  end
+ELSE
+  begin
+  RAISERROR ('The SSN doesnt exist.',15,1);
+  end
+ end
+ GO
+
+
+ Create procedure EmployeeUpdateisAdmin
+@SSN int, @isAdmin bit
+As
+begin
+IF EXISTS (select * from dbo.Employee where SSN=@SSN) 
+  Begin
+   update dbo.Employee
+   SET isAdmin=@isAdmin
+   where SSN = @SSN
+   Return @SSN
+  end
+ELSE
+  begin
+  RAISERROR ('The SSN doesnt exist.',15,1);
+  end
+ end
+ GO
+
+ create procedure EmployeeShow
+@SSN int
+AS
+Begin
+Select *
+from dbo.Employee
+where SSN = @SSN
+End
+GO
+
+
+
+Declare @PalletID int=2 exec PalletShow @palletID
+
+
+create procedure EmployeeDelete
+@SSN int
+AS
+Begin
+Delete
+from dbo.Employee
+where SSN= @SSN
+End
+GO
