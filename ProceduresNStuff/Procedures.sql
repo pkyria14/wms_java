@@ -49,7 +49,86 @@ select 'outp' = @outp
 
 GO
 
+--FREE POSITIONS
 select * 
 from dbo.Pallet
 where ExportDate > GETDATE()
 
+
+Create procedure PalletUpdatePosition
+@PalletID int,@position smallint
+As
+BEGIN
+IF Exists (select * from dbo.Pallet P where p.Position = @position AND p.ExportDate >= GETDATE())
+	Begin
+		RAISERROR ('Position is taken',15,1);
+	end
+ELSE
+   Begin
+   update dbo.Pallet 
+   SET Position=@position
+   where PalletID = @PalletID
+   Return @PalletID
+   end
+END
+
+GO
+declare @PalletID int = 2 , @Position smallint =104,
+@outp int
+exec @outp = PalletUpdatePosition @PalletID, @Position 
+select 'outp' = @outp
+
+GO
+
+Create procedure PalletUpdateExportDate
+@PalletID int,@exportdate date
+As
+ Begin
+   update dbo.Pallet 
+   SET ExportDate=@exportdate
+   where PalletID = @PalletID
+   Return @PalletID
+ end
+
+ GO
+
+ declare @PalletID int = 2 , @exportdate date = '2019-01-01',
+@outp int
+exec @outp = PalletUpdateExportDate @PalletID, @exportdate
+select 'outp' = @outp
+
+GO
+
+
+--update extracost changes totalcost too also cant change it if the palletID exist in a transaction
+
+Create procedure PalletUpdateExtraCost
+@PalletID int,@extracost smallint
+As
+BEGIN
+IF Exists (select * from dbo.TransPallet P where PalletID=@PalletID)
+	Begin
+		RAISERROR ('Cant change the price of the product when the transaction has been made.',15,1);
+	end
+ELSE
+   Begin
+   update dbo.Pallet 
+   SET ExtraCost=@extracost
+   where PalletID = @PalletID
+   update dbo.Pallet
+   SET totalcost = @extracost + BasicCost
+   where PalletID = @PalletID
+   Return @PalletID
+   end
+END
+
+GO 
+
+ declare @PalletID int = 1 , @extracost int = 150,
+@outp int
+exec @outp = PalletUpdateExtraCost @PalletID, @extracost
+select 'outp' = @outp
+
+select * from Pallet
+
+--Show and delete are left
