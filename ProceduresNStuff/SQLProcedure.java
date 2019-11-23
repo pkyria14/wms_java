@@ -57,16 +57,18 @@ public class SQLProcedure {
 	
 	public String buildStatement (String ProcedureName, int c,boolean hasOutput) {
 		String out;
-		if (hasOutput)   out = "{?= call " + ProcedureName + " (" ;
+		if (hasOutput)   {
+			out = "{ ? = call " + ProcedureName + " (" ;
+		}
 		else  out = "{call " + ProcedureName + " (" ;
 		int counter =0;
 		while (counter<c) {
-			if (counter<c-1)
-			{counter++;
+			counter++;
+			if (counter<c)
+			{
 			out+="?,";
 			}
 			else {
-				counter++;
 				out+="?";
 			}
 		}
@@ -84,24 +86,26 @@ public class SQLProcedure {
 		CallableStatement cstmt = null;
 	    ResultSet rs = null;
 	    int c=0;
-		String ia [] = input.split("'");
-		String Statement = buildStatement(ProcedureName,ia.length,hasOutput);
+		String ia [] = input.split(",");
+		int length = ia.length;
+		if (input.equals("")) length=0;
+		String Statement = buildStatement(ProcedureName,length,hasOutput);
 		String output = "" ;
 		 try {
 			 System.out.println(Statement);
 			 cstmt = conn.prepareCall(Statement);
 			 if (hasOutput) {
 				 cstmt.registerOutParameter(1, Types.INTEGER);
-				 while (c<ia.length) {
+				 while (c<length) {
 					 c++;
 					 cstmt.setString(c+1, ia[c-1]); 
 				 }
 				 cstmt.execute();
 				 int result = cstmt.getInt(1); 
-				 output =String.valueOf(result);
+				 output =Integer.toString(result);
 				 return output;
 			 } else {
-				 while (c<ia.length) {
+				 while (c<length) {
 					 c++;
 					 cstmt.setString(c, ia[c-1]); 
 				 }
@@ -109,6 +113,7 @@ public class SQLProcedure {
 				 c=0;
 					int columns= getColumns(rs);
 					 while (rs.next()) {	
+						 c=0;
 							while (c<columns) {
 								c++;
 								output+=(rs.getString(c) + " , ");		
@@ -119,7 +124,7 @@ public class SQLProcedure {
 			 } 
 			 
 		 }catch (Exception e) {
-			
+			System.out.println(e.getMessage());
 		 }
 	    
 		return "Error";
@@ -130,7 +135,8 @@ public class SQLProcedure {
 		conn= proc.getDBConnection();
 		//System.out.println(proc.buildStatement("EmployeeShow",3,true));
 		String output="";
-		output = proc.superFunction("2,10,", "PalletUpdateExtraCost",true);
+		//output = proc.superFunction("0000001,00001,K,K,1900-12-01,kman@email.com,Plebeian,99922623,22722723,overtherainbow,1,0", "EmployeeInsert",true);
+		//output = proc.superFunction("", "printEmployee", false);
 		System.out.println(output);
 	}
 }
