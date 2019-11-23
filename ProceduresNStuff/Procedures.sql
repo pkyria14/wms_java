@@ -372,3 +372,49 @@ from dbo.Employee
 where SSN= @SSN
 End
 GO
+
+create procedure printClient
+As
+begin
+select * from dbo.Client
+end
+
+Go
+
+create procedure printEmployee
+As
+begin
+select * from dbo.Employee
+end
+
+GO
+
+create procedure printPallet
+As
+begin
+select * from dbo.Pallet
+end
+
+GO
+
+create procedure printTransactions
+As
+begin
+select * from dbo.Transactions
+end
+
+GO
+
+create procedure printTransPallet
+As
+begin
+select * from dbo.TransPallet
+end
+GO
+
+create procedure printWarehouse
+As
+begin
+select * from dbo.Warehouse
+end
+GO
