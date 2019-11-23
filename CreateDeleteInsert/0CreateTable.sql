@@ -38,9 +38,9 @@ CREATE TABLE dbo.[Client](
 
 CREATE TABLE dbo.[Transactions](
   [TransactionID] [int] IDENTITY(1,1), 
-  [TransDate] [date] NOT NULL,
+  [TransactionID] [date] NOT NULL,
   [Price] [smallmoney]  NULL, --its calculated on its own
-  [ClientID] [int] NOT NULL,
+  [PalletID] [int] NOT NULL,
   CONSTRAINT [PKtransactions] PRIMARY KEY 
   ([TransactionID] ASC)
 )
@@ -49,7 +49,7 @@ CREATE TABLE dbo.[Transactions](
 --New table 
 Create Table dbo.TransPallet (
  [TransactionID] [int] NOT NULL,
- [PalletID] [smallint]  NOT NULL,
+ [PalletID] [smallint] UNIQUE  NOT NULL,
 )
 
 
@@ -66,7 +66,7 @@ CREATE TABLE dbo.[Pallet](
   [PalletID] [smallint] IDENTITY(1,1),
   [Position] [smallint] NOT NULL , --have to check in in procedure
   [WarehouseID] [smallint] NOT NULL,
-  [Clientid][int] NOT NULL,
+  [PalletID][int] NOT NULL,
   [ImportDate] [date] NOT NULL,
   [ExportDate] [date] NOT NULL,
   [IsFood] [bit] NOT NULL,
@@ -90,6 +90,7 @@ CREATE TABLE dbo.[LogFile](
 
 --Triggers
 
+
 GO
 Create Trigger CalculateTransCost on TransPallet
 After insert
@@ -102,6 +103,7 @@ Select TotalCost from dbo.Pallet P where P.PalletID = (Select PalletID from inse
 SET @price = (
 Select price from dbo.Transactions T where TransactionID = (Select TransactionID from inserted)
 )
+IF (@price IS NULL) SET @price =0
 
 UPDATE dbo.Transactions 
 SET Price = @price + @cost where TransactionID = (Select TransactionID from inserted)
@@ -145,7 +147,7 @@ ADD CONSTRAINT [FK_Auth_Employee] FOREIGN KEY ([SSN])
 REFERENCES [dbo].[Employee] ([SSN]);
 
 ALTER TABLE [dbo].[Transactions] WITH CHECK
-ADD CONSTRAINT [FK_trans_Client] FOREIGN KEY ([ClientID])
+ADD CONSTRAINT [FK_trans_Client] FOREIGN KEY ([PalletID])
 REFERENCES [dbo].[Client] ([ID]);
 
 
@@ -162,5 +164,5 @@ ADD CONSTRAINT [FK_Pallet_Warehouse] FOREIGN KEY ([WarehouseID])
 REFERENCES [dbo].[Warehouse] ([WarehouseID]);
 
 ALTER TABLE [dbo].[Pallet] WITH CHECK
-ADD CONSTRAINT [FK_Pallet_Client] FOREIGN KEY ([Clientid])
+ADD CONSTRAINT [FK_Pallet_Client] FOREIGN KEY ([PalletID])
 REFERENCES [dbo].[Client] ([ID]);
