@@ -99,8 +99,8 @@ GO
 
 Create Procedure ClientShow
 @ID int
-as begin
-
+as 
+begin
 select *
 from dbo.Client
 where dbo.client.ID=@ID
@@ -140,6 +140,9 @@ ELSE
 end
 Go
 
+drop procedure PalletUpdatePosition
+
+Go
 
 Create procedure PalletUpdatePosition
 @PalletID int,@position smallint
@@ -161,6 +164,11 @@ END
 
 GO
 
+drop procedure PalletUpdateExportDate
+
+Go
+
+
 Create procedure PalletUpdateExportDate
 @PalletID int,@exportdate date
 As
@@ -176,6 +184,9 @@ As
 
 
 --update extracost changes totalcost too also cant change it if the palletID exist in a transaction
+drop procedure PalletUpdateExtraCost
+
+Go
 
 Create procedure PalletUpdateExtraCost
 @PalletID int,@extracost smallint
@@ -199,6 +210,9 @@ END
 
 GO 
 
+drop procedure PalletShow
+
+Go
 
 create procedure PalletShow
 @PalletID int
@@ -211,7 +225,9 @@ End
 
 GO
 
+drop procedure PalletDelete
 
+Go
 
 create procedure PalletDelete
 @PalletID int
@@ -295,6 +311,8 @@ ELSE
  end
  GO
 
+   drop procedure EmployeeUpdatePhoneNumber
+  Go
 
 Create procedure EmployeeUpdatePhoneNumber
 @SSN int, @PhoneNumber int
@@ -314,6 +332,8 @@ ELSE
  end
  GO
 
+   drop procedure EmployeeUpdateSalary
+  Go
 
 Create procedure EmployeeUpdateSalary
 @SSN int, @Salary int
@@ -333,6 +353,8 @@ ELSE
  end
  GO
 
+  drop procedure EmployeeUpdateAddress
+  Go
  Create procedure EmployeeUpdateAddress
 @SSN int, @Address nvarchar(80)
 As
@@ -351,7 +373,9 @@ ELSE
  end
  GO
 
+ drop procedure EmployeeUpdateisAdmin
 
+ Go
  Create procedure EmployeeUpdateisAdmin
 @SSN int, @isAdmin bit
 As
@@ -371,6 +395,8 @@ ELSE
 
  GO
 
+ DROP PROCEDURE EmployeeShow
+ go
  create procedure EmployeeShow
 @SSN int
 AS
@@ -382,7 +408,8 @@ End
 GO
 
 
-
+DROP PROCEDURE EmployeeDelete
+Go
 create procedure EmployeeDelete
 @SSN int
 AS
@@ -393,6 +420,8 @@ where SSN= @SSN
 End
 GO
 
+DROP PROCEDURE printClient
+Go
 create procedure printClient
 As
 begin
@@ -400,6 +429,8 @@ select * from dbo.Client
 end
 
 Go
+
+DROP PROCEDURE printEmployee
 
 create procedure printEmployee
 As
@@ -409,6 +440,8 @@ end
 
 GO
 
+DROP PROCEDURE printPallet
+Go
 create procedure printPallet
 As
 begin
@@ -417,11 +450,17 @@ end
 
 GO
 
+DROP PROCEDURE printTransactions
+Go
 create procedure printTransactions
 As
 begin
 select * from dbo.Transactions
 end
+
+GO
+
+DROP PROCEDURE printPallet
 
 GO
 
@@ -431,6 +470,9 @@ begin
 select * from dbo.TransPallet
 end
 GO
+
+DROP PROCEDURE printWarehouse
+go
 
 create procedure printWarehouse
 As
@@ -491,18 +533,17 @@ BEGIN
 		FROM dbo.Authentication A
 		WHERE A.Username = @username AND A.Password = @password)
 	BEGIN 
-		SELECT A.SSN
+		Return (SELECT A.SSN
 		FROM dbo.Authentication A
-		WHERE A.Username = @username AND A.Password = @password
+		WHERE A.Username = @username AND A.Password = @password)
 	END
 	ELSE
 	BEGIN
-		SELECT 0000
+		return 0000
 	END
 END
 
 GO
-
 ------------------------------------------------------------------------------------------------------------------------------
 
 DROP PROCEDURE NotifyFull
@@ -542,19 +583,7 @@ END
 
 go
 
-DROP PROCEDURE SearchItemByPallet
-go
 
-CREATE PROCEDURE SearchItemByPallet
-@PalletID int
-AS
-BEGIN
-SELECT 	P.*										
-FROM dbo.Pallet P
-WHERE @PalletID = P.PalletID
-END
-
-go
 DROP PROCEDURE SearchItemByPosition
 go
 CREATE PROCEDURE SearchItemByPosition
