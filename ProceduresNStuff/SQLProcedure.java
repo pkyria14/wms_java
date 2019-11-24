@@ -1,5 +1,8 @@
 package epl343project;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -130,6 +133,24 @@ public class SQLProcedure {
 		return "Error";
 	}
 	
+	public void toFile (String input , boolean toFile) {
+		if (toFile) {
+			//Ask from GUI or msg on screen for filename
+			System.out.println("Filename");
+			Scanner in = new Scanner(System.in);
+			String filename = in.next();
+			try {
+				BufferedWriter writer= new BufferedWriter(new FileWriter(filename));
+				writer.write(input);
+				writer.close();
+			} catch (IOException e) {
+			}
+		}else {
+			//Output not file , either print to screen to send it to GUI?
+			System.out.println(input);
+		}
+	}
+	
 	public static void main (String args[] ) {
 		SQLProcedure proc = new SQLProcedure ();
 		conn= proc.getDBConnection();
@@ -137,6 +158,8 @@ public class SQLProcedure {
 		String output="";
 		//output = proc.superFunction("0000001,00001,K,K,1900-12-01,kman@email.com,Plebeian,99922623,22722723,overtherainbow,1,0", "EmployeeInsert",true);
 		//output = proc.superFunction("", "printEmployee", false);
-		System.out.println(output);
+		output=proc.superFunction("103", "SearchItemByPosition", false);
+		proc.toFile(output, true);
+		//System.out.println(output);
 	}
 }
