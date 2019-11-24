@@ -24,12 +24,12 @@
 
 
 # Ομάδα / Συνεισφέροντες
-* [Κυριάκος Γεωργίου] (https://github.com/kgeorg01)
-* [Παναγιώτης Κυριάκου] (https://github.com/pkyria14)
-* [Μάριος Πιτσιαλή] (https://github.com/mpitsi04)
-* [Μιχαήλ-Άγγελος Πιττάκαρας] (https://github.com/PittMichaelAngelo)
-* [Παναγιώτης Βασιλείου] (https://github.com/pvasil01)
-* [Θεόδωρος Σολωμού] (https://github.com/tsolom01)
+* [Κυριάκος Γεωργίου](https://github.com/kgeorg01)
+* [Παναγιώτης Κυριάκου](https://github.com/pkyria14)
+* [Μάριος Πιτσιαλή](https://github.com/mpitsi04)
+* [Μιχαήλ-Άγγελος Πιττάκαρας](https://github.com/PittMichaelAngelo)
+* [Παναγιώτης Βασιλείου](https://github.com/pvasil01)
+* [Θεόδωρος Σολωμού](https://github.com/tsolom01)
 
 
 
