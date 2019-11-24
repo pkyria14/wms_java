@@ -10,6 +10,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class SQLProcedure {
@@ -85,23 +88,22 @@ public class SQLProcedure {
 	 * @param hasOutput True or False  mostly used for insert/update
 	 * @param output The output of the procedure
 	 */
-	public String superFunction (String input ,String ProcedureName, boolean hasOutput ) {
+	public String superFunction (List <String> input ,String ProcedureName, boolean hasOutput ) {
 		CallableStatement cstmt = null;
 	    ResultSet rs = null;
 	    int c=0;
-		String ia [] = input.split(",");
-		int length = ia.length;
-		if (input.equals("")) length=0;
+		//String [] ia =  (String[]) input.toArray();
+		int length = input.size();
+		//if (input.equals("")) length=0;
 		String Statement = buildStatement(ProcedureName,length,hasOutput);
 		String output = "" ;
 		 try {
-			 System.out.println(Statement);
 			 cstmt = conn.prepareCall(Statement);
 			 if (hasOutput) {
 				 cstmt.registerOutParameter(1, Types.INTEGER);
 				 while (c<length) {
 					 c++;
-					 cstmt.setString(c+1, ia[c-1]); 
+					 cstmt.setString(c+1, input.get(c-1)); 
 				 }
 				 cstmt.execute();
 				 int result = cstmt.getInt(1); 
@@ -110,7 +112,7 @@ public class SQLProcedure {
 			 } else {
 				 while (c<length) {
 					 c++;
-					 cstmt.setString(c, ia[c-1]); 
+					 cstmt.setString(c, input.get(c-1)); 
 				 }
 				 rs=cstmt.executeQuery();
 				 c=0;
@@ -119,7 +121,8 @@ public class SQLProcedure {
 						 c=0;
 							while (c<columns) {
 								c++;
-								output+=(rs.getString(c) + " , ");		
+								String temp = String.format("%-32s", rs.getString(c)); 
+								output+=temp;		
 								}
 							output+="\n";
 				 }
@@ -145,10 +148,10 @@ public class SQLProcedure {
 				writer.close();
 			} catch (IOException e) {
 			}
-		}else {
+		}
 			//Output not file , either print to screen to send it to GUI?
 			System.out.println(input);
-		}
+		
 	}
 	
 	public static void main (String args[] ) {
@@ -158,8 +161,11 @@ public class SQLProcedure {
 		String output="";
 		//output = proc.superFunction("0000001,00001,K,K,1900-12-01,kman@email.com,Plebeian,99922623,22722723,overtherainbow,1,0", "EmployeeInsert",true);
 		//output = proc.superFunction("", "printEmployee", false);
-		output=proc.superFunction("103", "SearchItemByPosition", false);
-		proc.toFile(output, true);
+		List<String> input = new ArrayList<String>();
+	input.add("1");
+	//input.add("EXITdUG");
+		output=proc.superFunction(input , "EmployeeShow", false);
+		proc.toFile(output, false);
 		//System.out.println(output);
 	}
 }
