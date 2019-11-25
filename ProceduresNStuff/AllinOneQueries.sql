@@ -257,10 +257,13 @@ Create Procedure EmployeeInsert
 @HomeNumber int,
 @Address nvarchar(80),
 @Salary smallmoney ,
-@IsAdmin bit 
+@IsAdmin bit ,
+@username nvarchar(30),
+@password nvarchar(30)
 AS
  Begin
 	INSERT INTO dbo.Employee (SSN,ID,LNAME,FNAME,DATEOFBIRTH,Email,POSITION,PHONENUMBER,HOMENUMBER,ADDRESS,SALARY,ISADMIN) VALUES (@SSN,@ID,@LNAME,@FNAME,@DATEOFBIRTH,@email,@POSITION,@PHONENUMBER,@HOMENUMBER,@ADDRESS,@SALARY,@ISADMIN)
+	INSERT INTO dbo.Authentication (Username,Password) VALUES (@username,@password)
 	Return @SSN 
  end
 
